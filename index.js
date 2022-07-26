@@ -38,8 +38,9 @@ const provincias = [
 
 ]
 
-let provinciasAgregadas1 = []
-let destinos = [];
+let provinciasAgregadas1 = [];
+let destinos;
+let lugar;
 
 let formulario;
 let nombreIngresado;
@@ -147,7 +148,6 @@ function calculadora(event) {
         let costoHospedaje = hospedaje(dias, costoHotel);
         let costoTotal = costoViaje(costoTraslado, costoHospedaje);
 
-        // mostrarEnDomCalculadora(costoTotal);
         destinoPosible(presupuesto, costoTotal);
         verDato(provinciaEncontrada);
         mostrarAlert(costoTotal);
@@ -179,27 +179,33 @@ function mostrarAlert(costoTotal) {
 function validarFormulario(event) {
 
     provinciaAgregada.innerHTML = '';
-    event.preventDefault();
+    //event.preventDefault();
+
     let nombre = nombreIngresado.value;
     let distancia = parseFloat(distanciaIngresada.value);
     let valorHotel = parseFloat(valorHotelIngresado.value);
     let datoProvincia = datoProvinciaIngresado.value;
-    if (nombre !== null, distancia !== null, valorHotel !== null){
+    console.log(nombre);
+    console.log(distancia);
+    console.log(valorHotel);
+
+    if (nombre == "" || distancia == NaN || valorHotel == NaN) {
         
+        mostrarToastNoAprobado();
+    } 
+    else {
+
         let provincia = new Provincia(
             nombre,
             distancia,
             valorHotel,
             datoProvincia
         );
-        
-        mostrarToastAprobado();
+        console.log(provincia);
         provinciasAgregadas1.push(provincia)
         formulario.reset();
         almacenarProvinciasLS();
-    } else {
-
-        mostrarToastNoAprobado ();
+        mostrarToastAprobado();
     }
 }
 
@@ -213,33 +219,27 @@ function obtenerProvinciasAgregadas() {
     let destinosGuardados = localStorage.getItem("provincias");
     if (destinosGuardados !== null) {
         lugar = JSON.parse(destinosGuardados);
-        destinos.push(lugar);
+        // console.log(lugar);
+        // destinos.push(lugar);
     }
-    return destinos
+    return lugar
 }
 
 function mostrarEnDomProvinciasAgregadas(event) {
 
-    obtenerProvinciasAgregadas();
+    destinos2 = obtenerProvinciasAgregadas();
     event.preventDefault();
-    console.log(destinos);
-    for (i in destinos.length){
+    for (i=0; i<destinos2.length; i++){
 
+        let individual = destinos2[i];
+        let nombreAgregado = individual["nombre"];
         listaProvincias.innerHTML =
-        "<h2>Ultimo destino agregado: </h2>"
-            individual = destinos[i];
-            console.log(individual);
-            nombreA = individual["nombre"];
-            console.log(nombreA);
-            listaProvincias.innerHTML =
-                `<p><strong>Nombre: </strong> ${individual["nombre"]}</p>
+            `<h2>Ultimo destino agregado: </h2>
+            <p><strong>Nombre: </strong> ${nombreAgregado}</p>
             <p><strong>Distancia: </strong> ${individual["distancia"]}</p>
             <p><strong>Valor del Hotel: </strong> ${individual['valorHotel']}</p>
             <p><strong>Dato curioso: </strong> ${individual['datoProvincia']}</p>`
     }       
-//Luis querido, logro que funcione todo hasta aca ( o eso creo). Sin embargo, no puedo hacer que imprima en pantalla, a traves del DOM todos los objetos. Solo imprime el ultimo, por
-// lo que entiendo que esta sobre escribiendo. Sin embargo, el innerHTML esta adentro del for. Seguro hay algo que no entendi. Podrias explicarme como hacer para que, tal cual aparece uno
-//solo aparezcan todos los objetos del DOM. Gracias
 }
 
 function mostrarToastAprobado() {
@@ -262,10 +262,12 @@ function mostrarToastAprobado() {
 function mostrarToastNoAprobado () {
 
     Toastify({
-        text: "This is a toast",
+        text: "Error, faltan campos obligatorios",
         className: "info",
+        gravity: "bottom",
+        position: "right",
         style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
+            background: "linear-gradient(to right, #ff5f6d, #ffc371)",
         }
     }).showToast();
 }
