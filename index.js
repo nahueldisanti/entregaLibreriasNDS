@@ -166,7 +166,7 @@ function calculadora(event) {
 function mostrarAlert(costoTotal) {
 
     Swal.fire({
-
+        
         title: 'Aqui tiene el resultado de tu calculo!',
         icon: 'info',
         text: `Costo aproximado:$ ${costoTotal}`,
@@ -179,15 +179,12 @@ function mostrarAlert(costoTotal) {
 function validarFormulario(event) {
 
     provinciaAgregada.innerHTML = '';
-    //event.preventDefault();
+    event.preventDefault();
 
     let nombre = nombreIngresado.value;
     let distancia = parseFloat(distanciaIngresada.value);
     let valorHotel = parseFloat(valorHotelIngresado.value);
     let datoProvincia = datoProvinciaIngresado.value;
-    console.log(nombre);
-    console.log(distancia);
-    console.log(valorHotel);
 
     if (nombre == "" || distancia == NaN || valorHotel == NaN) {
         
@@ -218,9 +215,8 @@ function obtenerProvinciasAgregadas() {
 
     let destinosGuardados = localStorage.getItem("provincias");
     if (destinosGuardados !== null) {
+
         lugar = JSON.parse(destinosGuardados);
-        // console.log(lugar);
-        // destinos.push(lugar);
     }
     return lugar
 }
@@ -254,7 +250,6 @@ function mostrarToastAprobado() {
         style: {
             background: "linear-gradient(to right, #00b09b, #96c93d)",
         },
-        onClick: function(){} // Callback after click
     }).showToast();
     
 }
